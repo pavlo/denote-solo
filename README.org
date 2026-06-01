@@ -1,0 +1,146 @@
+#+TITLE: denote-solo
+#+OPTIONS: toc:2 num:nil
+
+#+HTML: <p><a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></p>
+
+Switch the active [[https://protesilaos.com/emacs/denote][Denote]] directory and keep working in it — one
+active /solo/ at a time, remembered across sessions and shown in the
+mode line.
+
+* Why denote-solo
+
+Denote can hold several independent note collections — e.g. =work=,
+=personal=, =research= — each its own directory with its own keywords.
+
+The official [[https://protesilaos.com/emacs/denote#h:81bdb4f4-fb1a-4e90-bb9a-9f6fc0b94991][=denote-silo=]] answers "which directory?" *every time* you
+run a command. That is great when you bounce between collections
+constantly.
+
+=denote-solo= takes the opposite stance: you pick one *once*, and it
+stays active until you switch again. Every Denote command just uses the
+current one. No per-command prompt, no second-guessing.
+
+#+begin_quote
+And yes — /silo/ → /solo/. One letter apart, but a different idea: not a
+silo you choose among each time, but a single collection that plays
+/solo/ until you cue the next one. That collection is what we call a
+*solo* throughout these docs. The pun is fully intentional. 🙂
+#+end_quote
+
+Use =denote-silo= if you want to choose per command; use =denote-solo= if
+you'd rather choose once and forget about it.
+
+* Features
+
+- Switch the active solo with a single command, =denote-solo-switch=.
+- The choice is *persisted* and restored on the next Emacs session.
+- The active solo is shown in the mode line, e.g. ={denote: work}=
+  (can be turned off).
+- Per-solo =denote-keyword-history=: keyword completions don't leak
+  between solos.
+
+* Installation
+
+=denote-solo= requires Emacs 28.1+ and [[https://github.com/protesilaos/denote][Denote]] 4.0+.
+
+** With =use-package= and =:vc= (Emacs 30+)
+
+#+begin_src emacs-lisp
+(use-package denote-solo
+  :vc (:url "https://github.com/pavlo/denote-solo")
+  :after denote
+  :config
+  (denote-solo-mode 1))
+#+end_src
+
+** With straight.el / elpaca
+
+#+begin_src emacs-lisp
+;; elpaca
+(use-package denote-solo
+  :ensure (:host github :repo "pavlo/denote-solo")
+  :config
+  (denote-solo-mode 1))
+#+end_src
+
+** Manual
+
+Clone the repository and put it on your =load-path=:
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "/path/to/denote-solo")
+(require 'denote-solo)
+(denote-solo-mode 1)
+#+end_src
+
+* Configuration
+
+Tell =denote-solo= about your solos via =denote-solo-directories= — an
+alist of =(NAME . DIRECTORY)= pairs:
+
+#+begin_src emacs-lisp
+(use-package denote-solo
+  :after denote
+  :config
+  (setq denote-solo-directories
+        '(("work"     . "~/notes/work")
+          ("personal" . "~/notes/personal")
+          ("research" . "~/notes/research")))
+  (denote-solo-mode 1))
+#+end_src
+
+Customisable options:
+
+| Option                             | Default | Meaning                                |
+|------------------------------------+---------+----------------------------------------|
+| =denote-solo-directories=          | =nil=   | Alist of =(NAME . DIRECTORY)= solos.   |
+| =denote-solo-modeline-indicator-p= | =t=     | Show the active solo in the mode line. |
+
+All options are available through =M-x customize-group RET denote-solo=.
+
+* Usage
+
+- =M-x denote-solo-switch= — pick a solo by name; =denote-directory=
+  switches to it and the choice is saved.
+- After switching, run any Denote command (=denote=, =denote-open-or-create=,
+  …) as usual — it operates in the active solo.
+- On the next Emacs start, =denote-solo-mode= restores the solo you used
+  last.
+
+The mode line shows the active solo:
+
+#+begin_example
+  ... {denote: work} ...
+#+end_example
+
+Bind the switch command to taste, e.g.:
+
+#+begin_src emacs-lisp
+(keymap-global-set "C-c n s" #'denote-solo-switch)
+#+end_src
+
+* How it works
+
+=denote-solo-switch= sets the global =denote-directory= and writes the
+chosen solo name to a small state file
+(=denote-solo-last-directory= under =user-emacs-directory=). The global
+minor mode =denote-solo-mode= reads that file on startup to restore the
+last solo, and manages the mode line indicator. Keyword history is
+swapped per solo so completions stay relevant to where you are.
+
+* Contributing
+
+Issues and pull requests are welcome. Before sending a patch, please run:
+
+#+begin_src sh
+make lint
+#+end_src
+
+which byte-compiles the package and runs =checkdoc= in a clean Emacs.
+
+* License
+
+Copyright (C) 2026 Pavlo V. Lysov.
+
+Released under the [[file:LICENSE][GNU General Public License v3.0 or later]]
+(=SPDX-License-Identifier: GPL-3.0-or-later=).
