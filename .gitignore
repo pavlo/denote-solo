@@ -1,0 +1,11 @@
+# Emacs / Elisp build artifacts
+*.elc
+*~
+\#*\#
+.\#*
+*-autoloads.el
+/.eldev/
+
+# Editor / tooling local state
+.claude/
+.dir-locals-2.el

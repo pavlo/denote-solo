@@ -7,12 +7,20 @@ Switch the active [[https://protesilaos.com/emacs/denote][Denote]] directory and
 active /solo/ at a time, remembered across sessions and shown in the
 mode line.
 
+* Demo
+
+https://github.com/user-attachments/assets/552d8ce6-c01c-4c3c-b52d-5b08ed3332ad
+
+Switching between the =Studies=, =Experimentations= and =Personal= solos,
+with the active one shown in the mode line.
+
 * Why denote-solo
 
-Denote can hold several independent note collections — e.g. =work=,
-=personal=, =research= — each its own directory with its own keywords.
+Denote can hold several independent note collections — e.g. =Studies=,
+=Experimentations=, =Personal= — each its own directory with its own
+keywords.
 
-The official [[https://protesilaos.com/emacs/denote#h:81bdb4f4-fb1a-4e90-bb9a-9f6fc0b94991][=denote-silo=]] answers "which directory?" *every time* you
+The official [[https://protesilaos.com/emacs/denote-silo][=denote-silo=]] answers "which directory?" *every time* you
 run a command. That is great when you bounce between collections
 constantly.
 
@@ -34,7 +42,7 @@ you'd rather choose once and forget about it.
 
 - Switch the active solo with a single command, =denote-solo-switch=.
 - The choice is *persisted* and restored on the next Emacs session.
-- The active solo is shown in the mode line, e.g. ={denote: work}=
+- The active solo is shown in the mode line, e.g. ={denote: Studies}=
   (can be turned off).
 - Per-solo =denote-keyword-history=: keyword completions don't leak
   between solos.
@@ -83,9 +91,9 @@ alist of =(NAME . DIRECTORY)= pairs:
   :after denote
   :config
   (setq denote-solo-directories
-        '(("work"     . "~/notes/work")
-          ("personal" . "~/notes/personal")
-          ("research" . "~/notes/research")))
+        '(("Studies"         . "~/notes/studies")
+          ("Experimentations" . "~/notes/experimentations")
+          ("Personal"        . "~/notes/personal")))
   (denote-solo-mode 1))
 #+end_src
 
@@ -94,7 +102,7 @@ Customisable options:
 | Option                             | Default | Meaning                                |
 |------------------------------------+---------+----------------------------------------|
 | =denote-solo-directories=          | =nil=   | Alist of =(NAME . DIRECTORY)= solos.   |
-| =denote-solo-modeline-indicator-p= | =t=     | Show the active solo in the mode line. |
+| =denote-solo-display-modeline=     | =t=     | Show the active solo in the mode line. |
 
 All options are available through =M-x customize-group RET denote-solo=.
 
@@ -110,7 +118,7 @@ All options are available through =M-x customize-group RET denote-solo=.
 The mode line shows the active solo:
 
 #+begin_example
-  ... {denote: work} ...
+  ... {denote: Studies} ...
 #+end_example
 
 Bind the switch command to taste, e.g.:

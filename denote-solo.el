@@ -74,7 +74,7 @@ that becomes `denote-directory' when that solo is selected."
   :type '(alist :key-type string :value-type string)
   :group 'denote-solo)
 
-(defcustom denote-solo-modeline-indicator-p t
+(defcustom denote-solo-display-modeline t
   "Whether to display the active solo in the mode line."
   :type 'boolean
   :group 'denote-solo)
@@ -113,23 +113,23 @@ Do nothing if no solo was saved or its directory no longer exists."
                    (insert-file-contents denote-solo--last-directory-file)
                    (string-trim (buffer-string))))
 	   (path (denote-solo--directory-for-name name)))
-      (if (file-directory-p path)
-	  (denote-solo-switch name)))))
+      (when (and path (file-directory-p path))
+	(denote-solo-switch name)))))
 
 (defun denote-solo--modeline-indicator ()
   "Return the mode line string for the active solo, or nil.
-Return nil when no solo is active or `denote-solo-modeline-indicator-p'
+Return nil when no solo is active or `denote-solo-display-modeline'
 is disabled."
   (when (and (bound-and-true-p denote-directory)
              denote-solo--current-solo
-             denote-solo-modeline-indicator-p)
+             denote-solo-display-modeline)
     (concat "{denote: " denote-solo--current-solo "}")))
 
 (defun denote-solo--directory-for-name (name)
   "Return the directory associated with solo NAME, or nil if unknown."
   (let ((result (seq-find (lambda (arg) (string= name (car arg)))
                           denote-solo-directories)))
-    (when result (cdr result))))
+    (when result (expand-file-name (cdr result)))))
 
 ;;;###autoload
 (define-minor-mode denote-solo-mode
