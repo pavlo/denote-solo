@@ -52,6 +52,11 @@
 (defvar denote-solo--current-solo nil
   "Name of the currently active solo, or nil if none is selected.")
 
+(defvar denote-solo--previous-solo nil
+  "Name of the previously active solo, or nil if none was yet selected.
+It is set as the default value for `completing-read` so that it is
+possible to toggle between two solos effortlessly")
+
 (defvar denote-solo--keyword-history nil
   "Alist mapping each solo name to its saved `denote-keyword-history'.
 Used to keep keyword history separate per solo when switching.")
@@ -79,6 +84,7 @@ that becomes `denote-directory' when that solo is selected."
   :type 'boolean
   :group 'denote-solo)
 
+;;;###autoload
 (defun denote-solo-switch (&optional name)
   "Switch the active Denote solo to NAME.
 NAME must be a key of `denote-solo-directories'.  When called
@@ -89,21 +95,24 @@ Set `denote-directory' to the matching path, preserve and restore
 can be restored in future sessions."
   (interactive
    (let ((items (mapcar (lambda (arg) (car arg)) denote-solo-directories)))
-     (list (completing-read "Denote Solo directory: " items nil t))))
+     (list (completing-read "Denote Solo: " items nil t nil nil denote-solo--previous-solo))))
   (let ((path (denote-solo--directory-for-name name)))
     (unless path
       (error "No directory configured for solo %S" name))
-    ;; store keyword history for the path we're leaving
-    (when denote-solo--current-solo
-      (push (cons denote-solo--current-solo denote-keyword-history)
-            denote-solo--keyword-history))
-    (setq denote-directory path)
-    ;; restore history from the one we're going into
-    (setq denote-keyword-history
-          (alist-get name denote-solo--keyword-history nil nil #'string=))
-    (with-temp-file denote-solo--last-directory-file
-      (insert name))
-    (setq denote-solo--current-solo name)))
+    (unless (equal name denote-solo--current-solo)
+      ;; store keyword history for the path we're leaving
+      (when denote-solo--current-solo
+        (push (cons denote-solo--current-solo denote-keyword-history)
+              denote-solo--keyword-history))
+      (setq denote-directory path)
+      ;; restore history from the one we're going into
+      (setq denote-keyword-history
+            (alist-get name denote-solo--keyword-history nil nil #'string=))
+      (with-temp-file denote-solo--last-directory-file
+        (insert name))
+      (setq denote-solo--previous-solo denote-solo--current-solo)
+      (setq denote-solo--current-solo name)
+      (message "Denote Solo: %s (%s)" name path))))
 
 (defun denote-solo--restore-last-solo ()
   "Restore the solo saved in `denote-solo--last-directory-file'.

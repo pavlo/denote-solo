@@ -46,6 +46,8 @@ you'd rather choose once and forget about it.
   (can be turned off).
 - Per-solo =denote-keyword-history=: keyword completions don't leak
   between solos.
+- *Quick toggle*: the previous solo is pre-selected in the prompt, so
+  =C-c n s RET= switches back to it instantly — no typing, no scrolling.
 
 * Installation
 
@@ -126,6 +128,18 @@ Bind the switch command to taste, e.g.:
 #+begin_src emacs-lisp
 (keymap-global-set "C-c n s" #'denote-solo-switch)
 #+end_src
+
+** Toggling between two solos
+
+The previous solo is always pre-selected in the prompt.  If you bounce
+between =Studies= and =Personal=, the workflow is:
+
+1. You are in =Studies=.  Run =denote-solo-switch= — =Personal= is pre-selected.
+2. Press =RET= — you are now in =Personal=.
+3. Run =denote-solo-switch= again — =Studies= is pre-selected.
+4. Press =RET= — back in =Studies=.
+
+One keystroke per switch, no matter how many solos you have configured.
 
 * How it works
 

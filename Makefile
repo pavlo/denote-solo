@@ -20,7 +20,7 @@ BATCH = $(EMACS) -Q --batch -L $(DENOTE)
 
 .PHONY: all compile lint clean
 
-all: compile
+all: lint
 
 compile:
 	$(BATCH) -f batch-byte-compile $(PACKAGE)
