@@ -3,6 +3,7 @@
 ;; Copyright (C) 2026 Pavlo V. Lysov
 
 ;; Author: Pavlo V. Lysov
+;; Assisted-by: Claude:claude-sonnet-4-6
 ;; Maintainer: Pavlo V. Lysov
 ;; Version: 1.0.1
 ;; Package-Requires: ((emacs "28.1") (denote "4.0"))
