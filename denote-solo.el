@@ -103,8 +103,9 @@ can be restored in future sessions."
     (unless (equal name denote-solo--current-solo)
       ;; store keyword history for the path we're leaving
       (when denote-solo--current-solo
-        (push (cons denote-solo--current-solo denote-keyword-history)
-              denote-solo--keyword-history))
+        (setf (alist-get denote-solo--current-solo denote-solo--keyword-history
+                         nil nil #'string=)
+              denote-keyword-history))
       (setq denote-directory path)
       ;; restore history from the one we're going into
       (setq denote-keyword-history
