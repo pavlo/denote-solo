@@ -2,9 +2,9 @@
 
 ;; Copyright (C) 2026 Pavlo V. Lysov
 
-;; Author: Pavlo V. Lysov
+;; Author: Pavlo V. Lysov <pavlikus@gmail.com>
 ;; Assisted-by: Claude:claude-sonnet-4-6
-;; Maintainer: Pavlo V. Lysov
+;; Maintainer: Pavlo V. Lysov <pavlikus@gmail.com>
 ;; Version: 1.0.1
 ;; Package-Requires: ((emacs "28.1") (denote "4.0"))
 ;; Keywords: convenience, notes
