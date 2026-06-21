@@ -101,12 +101,33 @@ alist of =(NAME . DIRECTORY)= pairs:
 
 Customisable options:
 
-| Option                             | Default | Meaning                                |
-|------------------------------------+---------+----------------------------------------|
-| =denote-solo-directories=          | =nil=   | Alist of =(NAME . DIRECTORY)= solos.   |
-| =denote-solo-display-modeline=     | =t=     | Show the active solo in the mode line. |
+| Option                             | Default                                  | Meaning                                      |
+|------------------------------------+------------------------------------------+----------------------------------------------|
+| =denote-solo-directories=          | =nil=                                    | Alist of =(NAME . DIRECTORY)= solos.         |
+| =denote-solo-display-modeline=     | =t=                                      | Show the active solo in the mode line.       |
+| =denote-solo-modeline-function=    | =denote-solo--default-modeline-text=     | Function that formats the mode line text.    |
 
 All options are available through =M-x customize-group RET denote-solo=.
+
+** Customising the mode line format
+
+By default the active solo is shown as ={denote: Studies}=.  To change
+the format, set =denote-solo-modeline-function= to any function that
+accepts a solo name string and returns a string:
+
+#+begin_src emacs-lisp
+(setq denote-solo-modeline-function
+      (lambda (name) (concat "[ " name " ]")))
+#+end_src
+
+Or use a named function:
+
+#+begin_src emacs-lisp
+(defun my/denote-solo-modeline (name)
+  (concat "[ " name " ]"))
+
+(setq denote-solo-modeline-function #'my/denote-solo-modeline)
+#+end_src
 
 * Usage
 
