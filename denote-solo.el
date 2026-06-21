@@ -5,7 +5,7 @@
 ;; Author: Pavlo V. Lysov <pavlikus@gmail.com>
 ;; Assisted-by: Claude:claude-sonnet-4-6
 ;; Maintainer: Pavlo V. Lysov <pavlikus@gmail.com>
-;; Version: 1.0.1
+;; Version: 1.0.2
 ;; Package-Requires: ((emacs "28.1") (denote "4.0"))
 ;; Keywords: convenience, notes
 ;; URL: https://github.com/pavlo/denote-solo
@@ -85,6 +85,17 @@ that becomes `denote-directory' when that solo is selected."
   :type 'boolean
   :group 'denote-solo)
 
+(defun denote-solo--default-modeline-text (name)
+  "Default mode line text for the active solo NAME."
+  (concat "{denote: " name "}"))
+
+(defcustom denote-solo-modeline-function #'denote-solo--default-modeline-text
+  "Function called to format the active solo name for the mode line.
+The function receives one argument - the solo NAME string - and must
+return a string."
+  :type 'function
+  :group 'denote-solo)
+
 ;;;###autoload
 (defun denote-solo-switch (&optional name)
   "Switch the active Denote solo to NAME.
@@ -113,8 +124,7 @@ can be restored in future sessions."
       (with-temp-file denote-solo--last-directory-file
         (insert name))
       (setq denote-solo--previous-solo denote-solo--current-solo)
-      (setq denote-solo--current-solo name)
-      (message "Denote Solo: %s (%s)" name path))))
+      (setq denote-solo--current-solo name))))
 
 (defun denote-solo--restore-last-solo ()
   "Restore the solo saved in `denote-solo--last-directory-file'.
@@ -134,7 +144,7 @@ is disabled."
   (when (and (bound-and-true-p denote-directory)
              denote-solo--current-solo
              denote-solo-display-modeline)
-    (concat "{denote: " denote-solo--current-solo "}")))
+    (funcall denote-solo-modeline-function denote-solo--current-solo)))
 
 (defun denote-solo--directory-for-name (name)
   "Return the directory associated with solo NAME, or nil if unknown."
